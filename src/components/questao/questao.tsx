@@ -1,6 +1,15 @@
 import type { RespostaArray } from "../resposta/resposta";
 import Resposta from "../resposta/resposta";
-import { RepostasContainer } from "./questao.styles";
+import {
+  EnunciadoQuestao,
+  QuestaoContainer,
+  RepostasContainer,
+  TituloQuestao,
+} from "./questao.styles";
+
+import imagem from "../../assets/perguntas.jpg";
+import { useImageStore } from "../../hooks/imagem/useImagem";  // ⬅️ mover pra cima
+import { useEffect } from "react";
 
 export type QuestaoArray = {
   titulo: string;
@@ -15,12 +24,25 @@ interface QuestaoProps {
   onResponder: (index: number) => void;
 }
 
-function Questao({ questao, respondida, respostaClicada, onResponder }: QuestaoProps) {
+function Questao({
+  questao,
+  respondida,
+  respostaClicada,
+  onResponder,
+}: QuestaoProps) {
+
+  const { setImageUrl } = useImageStore();   // ⬅️ AGORA SIM: dentro do componente
+
+  useEffect(() => {
+    setImageUrl(imagem);
+  }, [setImageUrl]);
+
   return (
     <>
-      <h1>{questao.titulo}</h1>
-      <p>{questao.enunciado}</p>
-
+      <QuestaoContainer>
+        <TituloQuestao>{questao.titulo}</TituloQuestao>
+        <EnunciadoQuestao>{questao.enunciado}</EnunciadoQuestao>
+      </QuestaoContainer>
       <RepostasContainer>
         {questao.respostas.map((resposta, index) => (
           <Resposta
